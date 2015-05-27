@@ -9,7 +9,7 @@
     <meta name="author" content="">
     <link rel="icon" href="../../favicon.ico">
 
-    <title>Nepal Earthquake 2015</title>
+    <title>Quakeathon-Nepal Earthquake 2015</title>
 
     <!-- Bootstrap core CSS -->
     <link href="bootstrap/css/bootstrap.min.css" rel="stylesheet">
@@ -37,9 +37,9 @@
           margin: 0px 0px 5px;
       }
       .h1, .h2, .h3, h1, h2, h3 {
-      margin-top: 5px;
-      margin-bottom: 5px;
-    }
+          margin-top: 5px;
+          margin-bottom: 5px;
+      }
       .district
       {
         fill: #cdd;
@@ -93,7 +93,7 @@
     #quake_data tspan
     {
         fill:"#fff";
-        font-family: "open sans";
+        font-family: "serif";
         font-size:12px;
         
     }
@@ -107,28 +107,41 @@
 
 </style>
 </head>
-
 <body>
     <div class="container">
         <div class="page-header">
             <h1>Quakeathon</h1>
             <div class="row">
-            <div class="col-sm-8"><p class="lead">Major earthquake and aftershocks in Nepal Since April 25, 2015</p></div>
-            <span id="total" class="counter"></span>
+                <div class="col-sm-7"><p class="lead">Major earthquake and aftershocks in Nepal Since April 25, 2015</p></div>
+                <div class="col-sm-3"><span id="total" class="counter"></span></div>
+                <div class="col-sm-2"><a href="https://twitter.com/share" class="twitter-share-button" data-via="shprabin">Tweet</a>
+                    <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');</script></div>
+                </div>
+            </div>    
+            <div id="map" style="border:solid 1px #ccc;"></div>
+            <div id="bar" style="width:100%;height:235px;overflow-x:scroll;overflow-y:hidden;"></div>
+            <br/>
+            <div class="row">
+                <div class="col-sm-8">Source: <a href="http://seismonepal.gov.np">http://seismonepal.gov.np</a>, <a href="https://github.com/mesaugat/geoJSON-Nepal">Github GeoJSON-NepalTopojson</a></div>
+
+                <div class="col-sm-2">
+                    <a href="https://twitter.com/shprabin" class="twitter-follow-button" data-show-count="false">Follow @shprabin</a>
+                    <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');</script>
+                    
+                </div>
+                <div class="col-sm-2">
+                    <a href="https://github.com/shprabin/quakeathon" class="btn btn-xs btn-default">View on GitHub</a>
+                </div>
             </div>
-        </div>    
-        <div id="map" style="border:solid 1px #ccc;">
+            <div class="row">
+                <div class="col-sm-9">Resources: <a href="http://mapshaper.org/">Mapshaper</a>, <a href="http://d3js.org/">d3.js</a>, <a href="https://github.com">GitHub</a></div>
+            </div>
+            <div class="row">
+                <div class="col-sm-9"><i>Note: This application does not use real-time data feed.</i></div>
+            </div>
         </div>
-        <div id="bar" style="width:100%;height:235px;overflow-x:scroll;overflow-y:hidden;">
-        </div>
-        <div class="row">
-            Source: <a href="http://seismonepal.gov.np">http://seismonepal.gov.np</a>, <a href="https://github.com/mesaugat/geoJSON-Nepal">Github GeoJSON-NepalTopojson</a>
-        </div>
-        <div class="row">
-        Resources: <a href="http://mapshaper.org/">Mapshaper</a>, <a href="http://d3js.org/">d3.js</a>
-        </div>
-    </div>
-    <script type="text/javascript">
+
+        <script type="text/javascript">
 
         //for map
         var map_width=1135;
@@ -213,111 +226,111 @@
                 return d3.min(dataset,function(d){
                     return d.mag;
                 });
-            });*/
-            
-            
-            
-            svg.selectAll("rect")
-            .data(dataset)
-            .enter()
-            .append("rect")
-            .attr("x", function(d, i) {
+});*/
+
+
+
+svg.selectAll("rect")
+.data(dataset)
+.enter()
+.append("rect")
+.attr("x", function(d, i) {
                 return i * 16;  //Bar width of 20 plus 1 for padding
             })
-            .attr("y", function(d) {
+.attr("y", function(d) {
                 return 140 - d.mag*15;  //Height minus data value
             })
-            .attr("width", 15)
-            .attr("height", function(d) {
+.attr("width", 15)
+.attr("height", function(d) {
                 return d.mag * 15;  // <-- Times four!
             })
-            .attr("fill", function(d) {
-                return "rgb("+0 +","+(255-Number(d3.round(d.mag)*20))+", "+ (255-Number(d3.round(d.mag)*20)) +")";
-            })
-            .on('mouseover',function(d,i){
-                d3.select(this).attr("fill","#ccc");
-                on_mouse_over(d,i);
+.attr("fill", function(d) {
+    return "rgb("+0 +","+(255-Number(d3.round(d.mag)*20))+", "+ (255-Number(d3.round(d.mag)*20)) +")";
+})
+.on('mouseover',function(d,i){
+    d3.select(this).attr("fill","#ccc");
+    on_mouse_over(d,i);
 
-            })
-            .on('mouseout',function(d,i){
-                d3.select(this).attr("fill",get_fill);
-                on_mouse_out(d,i);
-            })
-            
-            svg_map.selectAll(".circle")
-            .data(dataset)
-            .enter()
-            .append("circle")
-            .attr("r", function(d){
-                return d.mag*2;
-            })
-            .attr("transform",function(d,i)
-            {
-                return "translate(" + projection([d.lon,d.lat]) + ")";
-            })
-            .attr("class",function(d,i)
-            {
-                return "quake-circle q_"+i;
-            })
-            .attr("fill",get_fill)
-            .attr("stroke","#000")
-            .on('mouseover',function(d,i){
-                d3.select(this).attr("fill","#ccc");
-                on_mouse_over(d,i);
-                
-            })
-            .on('mouseout',function(d,i){
-                d3.select(this).attr("fill",get_fill);
-                on_mouse_out(d,i);
-            });
-            
-            
-            svg.selectAll("text")
-            .data(dataset)
-            .enter()
-            .append("text")
-            .text(function(d){
-                var scale=d3.format(".1f");
-                return scale(d.mag);
-            })
-            .attr("x", function(d, i) {
+})
+.on('mouseout',function(d,i){
+    d3.select(this).attr("fill",get_fill);
+    on_mouse_out(d,i);
+})
+
+svg_map.selectAll(".circle")
+.data(dataset)
+.enter()
+.append("circle")
+.attr("r", function(d){
+    return d.mag*2;
+})
+.attr("transform",function(d,i)
+{
+    return "translate(" + projection([d.lon,d.lat]) + ")";
+})
+.attr("class",function(d,i)
+{
+    return "quake-circle q_"+i;
+})
+.attr("fill",get_fill)
+.attr("stroke","#000")
+.on('mouseover',function(d,i){
+    d3.select(this).attr("fill","#ccc");
+    on_mouse_over(d,i);
+
+})
+.on('mouseout',function(d,i){
+    d3.select(this).attr("fill",get_fill);
+    on_mouse_out(d,i);
+});
+
+
+svg.selectAll("text")
+.data(dataset)
+.enter()
+.append("text")
+.text(function(d){
+    var scale=d3.format(".1f");
+    return scale(d.mag);
+})
+.attr("x", function(d, i) {
                 return (i * 15)+i+1;  // +24
             })
-            .attr("y", function(d) {
+.attr("y", function(d) {
                 return 140 - (d.mag * 15)+15;              // +15
             })
-            .attr("font-family", "sans-serif")
-            .attr("font-size", "9px")
-            .attr("fill", "white");
-            
-            svg.selectAll("text1")
-            .data(dataset)
-            .enter()
-            .append("text")
-            .text(function(d){
-                var format=d3.time.format("%Y/%m/%d %H:%M");
-                var date=format.parse(d.when);
-                var print_format=d3.time.format("%b-%d %H:%M");
-                return print_format(date);
-            })
-            .attr("x", function(d, i) {
-                return "80";    
-            })
-            .attr("y", function(d,i) {
+.attr("font-family", "sans-serif")
+.attr("font-size", "9px")
+.attr("fill", "white");
+
+svg.selectAll("text1")
+.data(dataset)
+.enter()
+.append("text")
+.text(function(d){
+    var format=d3.time.format("%Y/%m/%d %H:%M");
+    var date=format.parse(d.when);
+    var print_format=d3.time.format("%b-%d %H:%M");
+    return print_format(date);
+})
+.attr("x", function(d, i) {
+    return "80";    
+})
+.attr("y", function(d,i) {
                 return (i * 15)+i+3;  // +24// +15
             })
-            .attr("font-family", "sans-serif")
-            .attr("font-size", "11px")
-            .attr("fill", "#005D5D")
-            .attr("text-anchor", "middle")
-            .attr("transform", function(d,i){
-                return "translate("+ 7+","+260 +") rotate(270)"
-            }).
-            attr("id",function(d,i){
-                return "date_text_"+i;
-            });
-            
-        });
+.attr("font-family", "sans-serif")
+.attr("font-size", "11px")
+.attr("fill", "#005D5D")
+.attr("text-anchor", "middle")
+.attr("transform", function(d,i){
+    return "translate("+ 7+","+260 +") rotate(270)"
+}).
+attr("id",function(d,i){
+    return "date_text_"+i;
+});
+
+});
 
 function get_fill(d)
 {
@@ -380,12 +393,12 @@ function show_data_box(d,i)
 
     var text=svg_map.select("#quake_data")
     .attr("display",null);
-        text.append("tspan").attr("x",x).attr("dy","0").attr("fill","#fff").text(function(){
-                var format=d3.time.format("%Y/%m/%d %H:%M");
-                var date=format.parse(d.when);
-                var print_format=d3.time.format("%b-%d %H:%M");
-                return "Time: "+print_format(date);
-            });
+    text.append("tspan").attr("x",x).attr("dy","0").attr("fill","#fff").text(function(){
+        var format=d3.time.format("%Y/%m/%d %H:%M");
+        var date=format.parse(d.when);
+        var print_format=d3.time.format("%b-%d %H:%M");
+        return "Time: "+print_format(date);
+    });
     text.append("tspan").attr("x",x).attr("dy","18").attr("fill","#fff").text("Quake No: "+(i+1));
     text.append("tspan").attr("x",x).attr("dy","18").attr("fill","#fff").text("Magnitude: "+d.mag);
     text.append("tspan").attr("x",x).attr("dy","18").attr("fill","#fff").text("Epicenter: "+d.epi);
