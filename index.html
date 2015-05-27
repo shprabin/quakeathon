@@ -1,14 +1,47 @@
 <!DOCTYPE html>
-<meta charset="utf-8">
-<link href='https://fonts.googleapis.com/css?family=Open+Sans:400,300,700' rel='stylesheet' type='text/css'>
-<style>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="icon" href="../../favicon.ico">
 
-    body {
-        margin: 0;
-        min-width: 960px;
+    <title>Nepal Earthquake 2015</title>
+
+    <!-- Bootstrap core CSS -->
+    <link href="bootstrap/css/bootstrap.min.css" rel="stylesheet">
+
+
+    <!-- Just for debugging purposes. Don't actually copy these 2 lines! -->
+    <!--[if lt IE 9]><script src="../../assets/js/ie8-responsive-file-warning.js"></script><![endif]-->
+    <script src="http://getbootstrap.com/assets/js/ie-emulation-modes-warning.js"></script>
+
+    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+      <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+      <![endif]-->
+      <script src="d3.min.js"></script>
+      <script src="http://d3js.org/topojson.v1.min.js"></script>
+      <style>
+
+        body {
+            margin: 0;
+            min-width: 960px;
+        }
+
+        .page-header {
+          margin: 0px 0px 5px;
+      }
+      .h1, .h2, .h3, h1, h2, h3 {
+      margin-top: 5px;
+      margin-bottom: 5px;
     }
-    .district
-    {
+      .district
+      {
         fill: #cdd;
         stroke: #aaa;
         /*stroke-dasharray: 2,2;
@@ -18,6 +51,10 @@
     {
         fill:#194775;
         font-size:11px;
+    }
+
+    .bold{
+        font-weight: bold;
     }
 
     .place-label.Kathmandu
@@ -35,12 +72,6 @@
         margin-right:2px;
     }
 
-    #report
-    {
-        font-family: 'open sans';
-        font-size:13px;
-        color:#505050 ;
-    }
 
     .quake-circle
     {
@@ -56,8 +87,7 @@
 
     .q-data-box
     {
-        fill:#660000;
-        fill-opacity:0.3;
+        fill:#194775;
     }
     
     #quake_data tspan
@@ -67,31 +97,41 @@
         font-size:12px;
         
     }
+    .counter
+    {
+        font-size: 14px;
+        font-weight: bold;
+        font-style: italic;
+    }
 
 
 </style>
+</head>
+
 <body>
-    <script src="d3.min.js"></script>
-    <script src="http://d3js.org/topojson.v1.min.js"></script>
-    <div id="map" style="width:1000px;height:500px;border:solid 1px red;">
-    </div>
-    <div id="bar" style="width:100%;height:300px;overflow-x:scroll;">
-    </div>
-    <div id="report">
-        <p>
-            Total Count Since April 25, 2015 : <span id="total"></span>
-        </p>
-        <p>
-            Highest: <span id="highest"></span>
-        </p>
-        <p>
-            Lowest: <span id="lowest"></span>
-        </p>
+    <div class="container">
+        <div class="page-header">
+            <h1>Quakeathon</h1>
+            <div class="row">
+            <div class="col-sm-8"><p class="lead">Major earthquake and aftershocks in Nepal Since April 25, 2015</p></div>
+            <span id="total" class="counter"></span>
+            </div>
+        </div>    
+        <div id="map" style="border:solid 1px #ccc;">
+        </div>
+        <div id="bar" style="width:100%;height:235px;overflow-x:scroll;overflow-y:hidden;">
+        </div>
+        <div class="row">
+            Source: <a href="http://seismonepal.gov.np">http://seismonepal.gov.np</a>, <a href="https://github.com/mesaugat/geoJSON-Nepal">Github GeoJSON-NepalTopojson</a>
+        </div>
+        <div class="row">
+        Resources: <a href="http://mapshaper.org/">Mapshaper</a>, <a href="http://d3js.org/">d3.js</a>
+        </div>
     </div>
     <script type="text/javascript">
-        
+
         //for map
-        var map_width=1000;
+        var map_width=1135;
         var map_height=500;
         var svg_map = d3.select("#map")
         .append("svg")
@@ -121,7 +161,7 @@
             .enter().append("text")
             .attr("class", function(d,i){
               return "place-label " +d.properties.name;
-            })
+          })
             .attr("transform", function(d) { 
                 return "translate(" + path.centroid(d) + ")"; 
             })
@@ -131,17 +171,6 @@
         });
         add_data_box();
         
-
-
-
-
-
-
-
-
-
-
-
 
         var h=300;
         var barPadding=5;
@@ -168,9 +197,9 @@
             
             d3.select("#total")
             .append("count")
-            .text(dataset.length);
+            .text(dataset.length+ " quakes and counting..");
             
-            d3.select("#highest")
+            /*d3.select("#highest")
             .append("scale")
             .text(function(){
                 return d3.max(dataset,function(d){
@@ -184,7 +213,7 @@
                 return d3.min(dataset,function(d){
                     return d.mag;
                 });
-            });
+            });*/
             
             
             
@@ -196,7 +225,7 @@
                 return i * 16;  //Bar width of 20 plus 1 for padding
             })
             .attr("y", function(d) {
-                return 200 - d.mag*15;  //Height minus data value
+                return 140 - d.mag*15;  //Height minus data value
             })
             .attr("width", 15)
             .attr("height", function(d) {
@@ -207,29 +236,12 @@
             })
             .on('mouseover',function(d,i){
                 d3.select(this).attr("fill","#ccc");
-                var data=d;
-                var index=i;
-                svg_map.append("circle")
-                .attr("r", function(){
-                    return data.mag*2;
-                })
-                .attr("transform",function()
-                {
-                    return "translate(" + projection([data.lon,data.lat]) + ")";
-                })
-                .attr("class",function()
-                {
-                    return "hc hc_"+index;
-                });
-                show_data_box(d,i);
-                
+                on_mouse_over(d,i);
+
             })
             .on('mouseout',function(d,i){
                 d3.select(this).attr("fill",get_fill);
-                var data=d;
-                var index=i;
-                svg_map.select(".hc_"+index).remove();
-                hide_data_box();
+                on_mouse_out(d,i);
             })
             
             svg_map.selectAll(".circle")
@@ -251,29 +263,12 @@
             .attr("stroke","#000")
             .on('mouseover',function(d,i){
                 d3.select(this).attr("fill","#ccc");
-                var data=d;
-                var index=i;
-                svg_map.append("circle")
-                .attr("r", function(){
-                    return data.mag*2;
-                })
-                .attr("transform",function()
-                {
-                    return "translate(" + projection([data.lon,data.lat]) + ")";
-                })
-                .attr("class",function()
-                {
-                    return "hc hc_"+index;
-                });
-                show_data_box(d,i);
+                on_mouse_over(d,i);
                 
             })
             .on('mouseout',function(d,i){
                 d3.select(this).attr("fill",get_fill);
-                var data=d;
-                var index=i;
-                svg_map.select(".hc_"+index).remove();
-                hide_data_box();
+                on_mouse_out(d,i);
             });
             
             
@@ -289,7 +284,7 @@
                 return (i * 15)+i+1;  // +24
             })
             .attr("y", function(d) {
-                return 200 - (d.mag * 15)+15;              // +15
+                return 140 - (d.mag * 15)+15;              // +15
             })
             .attr("font-family", "sans-serif")
             .attr("font-size", "9px")
@@ -300,17 +295,15 @@
             .enter()
             .append("text")
             .text(function(d){
-                var format=d3.time.format("%m/%d/%y %H:%M");
+                var format=d3.time.format("%Y/%m/%d %H:%M");
                 var date=format.parse(d.when);
                 var print_format=d3.time.format("%b-%d %H:%M");
-                
                 return print_format(date);
             })
             .attr("x", function(d, i) {
-                return "5";    
+                return "80";    
             })
             .attr("y", function(d,i) {
-                
                 return (i * 15)+i+3;  // +24// +15
             })
             .attr("font-family", "sans-serif")
@@ -319,76 +312,100 @@
             .attr("text-anchor", "middle")
             .attr("transform", function(d,i){
                 return "translate("+ 7+","+260 +") rotate(270)"
+            }).
+            attr("id",function(d,i){
+                return "date_text_"+i;
             });
             
-
-
-             
-
-
         });
-        
-        function get_fill(d)
-        {
-            return "rgb("+0 +","+(255-Number(d3.round(d.mag)*20))+", "+ (255-Number(d3.round(d.mag)*20)) +")";
-        }
 
-        function on_mouse_over()
-        {
+function get_fill(d)
+{
+    return "rgb("+0 +","+(255-Number(d3.round(d.mag)*20))+", "+ (255-Number(d3.round(d.mag)*20)) +")";
+}
 
-        }
+function on_mouse_over(data,index)
+{
+    svg_map.append("circle")
+    .attr("r", function(){
+        return data.mag*2;
+    })
+    .attr("transform",function()
+    {
+        return "translate(" + projection([data.lon,data.lat]) + ")";
+    })
+    .attr("class",function()
+    {
+        return "hc hc_"+index;
+    });
+    show_data_box(data,index);
+    d3.select("#date_text_"+index).attr("class","bold");
+}
 
-        function on_mouse_out()
-        {
-          
-        }
-        
-        function add_data_box()
-        {
-            svg_map.append("rect")
-            .attr("x",function()
-            {
-                return map_width-200;
-            })
-            .attr("y",10)
-            .attr("height",150)
-            .attr("width",190)
-            .attr("class","q-data-box")
-            .attr("display","none");
-            
-            svg_map.append("text")
-            .attr("id","quake_data")
-            .attr("x",function()
-            {
-                return map_width-200;
-            })
-            .attr("y",25);
-        }
-        
-        function show_data_box(d,i)
-        {
-            var x=map_width-190;
-            svg_map.select(".q-data-box")
-            .attr("display",null);
-            
-            var text=svg_map.select("#quake_data")
-            .attr("display",null)
-            text.append("tspan").attr("x",x).attr("dy","20").text("Quake No: "+i);
-            text.append("tspan").attr("x",x).attr("dy","20").text("Magnitude: "+d.mag);
-            
-        }
-        
-        function hide_data_box()
-        {
-            svg_map.select(".q-data-box")
-            .attr("display","none");
-            var text=svg_map.select("#quake_data");
-            text.selectAll("*").remove();
-        }
-        
-        
-    </script>
+function on_mouse_out(data,index)
+{
 
+    svg_map.select(".hc_"+index).remove();
+    d3.select("#date_text_"+index).attr("class",null);
+    hide_data_box();
+}
+
+function add_data_box()
+{
+    svg_map.append("rect")
+    .attr("x",function()
+    {
+        return map_width-200;
+    })
+    .attr("y",10)
+    .attr("height",75)
+    .attr("width",190)
+    .attr("class","q-data-box")
+    .attr("display","none");
+
+    svg_map.append("text")
+    .attr("id","quake_data")
+    .attr("x",function()
+    {
+        return map_width-200;
+    })
+    .attr("y",25);
+}
+
+function show_data_box(d,i)
+{
+    var x=map_width-190;
+    svg_map.select(".q-data-box")
+    .attr("display",null);
+
+    var text=svg_map.select("#quake_data")
+    .attr("display",null);
+        text.append("tspan").attr("x",x).attr("dy","0").attr("fill","#fff").text(function(){
+                var format=d3.time.format("%Y/%m/%d %H:%M");
+                var date=format.parse(d.when);
+                var print_format=d3.time.format("%b-%d %H:%M");
+                return "Time: "+print_format(date);
+            });
+    text.append("tspan").attr("x",x).attr("dy","18").attr("fill","#fff").text("Quake No: "+(i+1));
+    text.append("tspan").attr("x",x).attr("dy","18").attr("fill","#fff").text("Magnitude: "+d.mag);
+    text.append("tspan").attr("x",x).attr("dy","18").attr("fill","#fff").text("Epicenter: "+d.epi);
+
+
+}
+
+function hide_data_box()
+{
+    svg_map.select(".q-data-box")
+    .attr("display","none");
+    var text=svg_map.select("#quake_data");
+    text.selectAll("*").remove();
+}
+
+
+</script>
+<script src="http://getbootstrap.com/assets/js/ie10-viewport-bug-workaround.js"></script>
+<script src="http://code.jquery.com/jquery-1.11.3.min.js"></script>
+<script src="bootstrap/js/bootstrap.min.js"></script>
 </body>
 
 </html>
