@@ -266,7 +266,12 @@ svg_map.selectAll(".circle")
 })
 .attr("transform",function(d,i)
 {
+    try{
     return "translate(" + projection([d.lon,d.lat]) + ")";
+    }catch(err)
+    {
+        console.log(d);
+    }
 })
 .attr("class",function(d,i)
 {
@@ -308,10 +313,16 @@ svg.selectAll("text1")
 .enter()
 .append("text")
 .text(function(d){
+    try
+    {
     var format=d3.time.format("%Y/%m/%d %H:%M");
     var date=format.parse(d.when);
     var print_format=d3.time.format("%b-%d %H:%M");
     return print_format(date);
+    }catch(err)
+    {
+        console.log("time error"+d.when);
+    }
 })
 .attr("x", function(d, i) {
     return "80";    
