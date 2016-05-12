@@ -3,5 +3,7 @@
 Author: Prabin Shrestha (shprabin@gmail.com)
 
 This page was created to visualize a earthquakes and its aftershocks that happened in Nepal since April 25,2015.
+http://shprabin.github.io/quakeathon/
 
 DataSource: http://seismonepal.gov.np
+
